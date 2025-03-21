@@ -1,12 +1,21 @@
 package com.future.my.member.web;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.future.my.member.service.MemberService;
 import com.future.my.member.vo.MemberVO;
@@ -16,6 +25,12 @@ public class MemberController {
 	
 	@Autowired
 	MemberService memberService;
+	
+	@Value("#{util['file.upload.path']}")
+	private String CURR_IMAGE_PATH;
+	
+	@Value("#{util['file.download.path']}")
+	private String WEB_PATH;
 	
 	@RequestMapping("/registView")
 	public String registView() {
@@ -58,7 +73,7 @@ public class MemberController {
 			res.addCookie(cookie);
 		}else {
 			Cookie cookie = new Cookie("rememberId", "");
-			cookie.setMaxAge(0);//동일한 쿠키의 유효시간을 0으로
+			cookie.setMaxAge(0);
 			res.addCookie(cookie);
 		}
 		
@@ -70,5 +85,32 @@ public class MemberController {
 			return "redirect:/";
 	}
 	
+	
+	@RequestMapping("/mypage")
+	public String myapge(HttpSession session, Model model) {
+		
+		System.out.println(CURR_IMAGE_PATH);
+		if(session.getAttribute("login") ==null) {
+			return "redirect:/loginView";
+		}
+		return "member/mypage";
+	}
+	@ResponseBody						
+	@PostMapping("/files/upload")
+	public Map<String, Object> uploadFiles(HttpSession session,
+	                                       @RequestParam("uploadImage") MultipartFile file) throws Exception { 
+	    MemberVO vo = (MemberVO) session.getAttribute("login");
+	    System.out.println(file);
+	    
+	    String imgPath = memberService.profileUpload(vo
+	    						,CURR_IMAGE_PATH
+	    						,WEB_PATH, file);
+	    
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("message", "success");
+	    map.put("imagePath", imgPath);
+	    return map;
+	}
+
 	
 }

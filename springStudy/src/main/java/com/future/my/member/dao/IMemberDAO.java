@@ -12,4 +12,6 @@ public interface IMemberDAO {
 	public int registMember(MemberVO vo);
 	
 	public MemberVO loginMember(MemberVO vo);
+	//프로필 이미지 수정
+	public int profileUpload(MemberVO vo);
 }

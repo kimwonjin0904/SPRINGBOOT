@@ -1,7 +1,14 @@
 package com.future.my.member.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.future.my.member.dao.IMemberDAO;
 import com.future.my.member.vo.MemberVO;
@@ -29,4 +36,29 @@ public class MemberService {
 			}
 			return user;
 		}
+		
+		public String profileUpload(MemberVO vo							//사용자정보
+									, String uploadDir					//서버 파일 위치
+									, String webPath					//웹페이지 사용 경로
+									,MultipartFile file) throws Exception {				//저장 파일
+			//파일명 생성
+			String origin = file.getOriginalFilename();
+			String uniqe = UUID.randomUUID().toString() + "_" + origin;
+			String dbPath = webPath + uniqe; //경로 + 유니크 파일명
+			Path filePath = Paths.get(uploadDir,uniqe);
+			//서버에 물리적으로 저장
+			try {
+				Files.copy(file.getInputStream(), filePath);
+			}catch (IOException e) {
+				throw new Exception("file to save the tile",e);
+			}
+			//db저장
+			vo.setProfileImg(dbPath);
+			int result =dao.profileUpload(vo);
+			if(result ==0) {
+				throw new Exception();
+			}
+			return dbPath;
+			
+		}	
 }

@@ -56,8 +56,9 @@ public class BoardService {
 	public ArrayList<ReplyVO> getReplyList(int boardNo){
 		return dao.getReplyList(boardNo);
 	}
-	//댓글 삭제
+	// 댓글 삭제 
 	public int delReply(String replyNo) {
 		return dao.delReply(replyNo);
 	}
+	
 }

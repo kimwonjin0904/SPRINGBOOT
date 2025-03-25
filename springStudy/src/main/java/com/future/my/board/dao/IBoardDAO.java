@@ -24,6 +24,7 @@ public interface IBoardDAO {
 	public ReplyVO getReply(String replyNo);
 	// 댓글 목록 조회
 	public ArrayList<ReplyVO> getReplyList(int boardNo);
-	//댓글 삭제 
+	// 댓글 삭제 
 	public int delReply(String replyNo);
+	
 }

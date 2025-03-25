@@ -129,7 +129,7 @@
 					 str += "<td>" +res.replyContent + "</td>";
 					 str += "<td>" +res.memNm + "</td>";
 					 str += "<td>" +res.replyDate + "</td>";
-					 str += "<td><a onclick='fn_del(\"" + res.replyNo + "\") ' > x </a></td>";
+					 str += "<td><a onclick='fn_del(\""+res.replyNo +"\")' >x</a></td>";
 					 str += "</tr>";
 					 $("#replyBody").prepend(str);
 				 }
@@ -139,24 +139,24 @@
 			  });
 		 }
 		 
-		 //댓글 삭제
+		 // 댓글 삭제 
 		 function fn_del(p_reNo){
 			 if(confirm("정말로 삭제!?")){
 				 $.ajax({
-					url : '<c:url  value="/delReplyDo"/>'
-					,type: 'POST'
-					,contentType: 'application/json'
-					,dataType:'text'
-					,data: JSON.stringify({"replyNo":p_reNo})
-					,success:function(res){
-						console.log("정상처리");
-						console.log(res);
-						if(res == "s"){
-							$("#"+ p_reNo).remove();
-						}
-					},error:function(e){
-						console.log(e);
-					}
+					   url : '<c:url value="/delReplyDo" />'
+					  ,type : 'POST'
+					  ,contentType: 'application/json'
+					  ,dataType:'text'
+					  ,data : JSON.stringify({"replyNo":p_reNo})
+					  ,success:function(res){
+						  console.log("정상 처리");
+						  console.log(res);
+						  if(res == "s"){
+							  $("#"+p_reNo).remove();
+						  }
+					  },error:function(e){
+						  console.log(e);
+					  }
 				 });
 			 }
 		 }

@@ -78,17 +78,11 @@
 	</select>
 	
 	<update id="delReply" parameterType="String">
-UPDATE replys
-SET del_yn = 'Y'
-WHERE reply_no = #{replyNo}
+	
+		UPDATE replys
+		SET del_yn ='Y'
+		WHERE reply_no = #{replyNo}
+		
 	</update>
-	
-	
-	
-	
-	
-	
-	
-	
 	
 </mapper>

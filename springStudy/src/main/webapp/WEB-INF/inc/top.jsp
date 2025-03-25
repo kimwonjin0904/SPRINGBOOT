@@ -22,7 +22,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#portfolio">자유게시판</a></li>
+                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="${pageContext.request.contextPath}/free/freeList">자유게시판</a></li>
 				<!-- 로그인 전 -->
                 <c:if test="${sessionScope.login == null }">
 	                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="${pageContext.request.contextPath}/loginView">로그인</a></li>
@@ -31,8 +31,20 @@
             	<!-- 로그인 후 -->
             	<c:if test="${sessionScope.login != null }">
             		<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="${pageContext.request.contextPath}/boardView">회원 게시판</a></li>
-            		<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="${pageContext.request.contextPath}/mypage">${sessionScope.login.memId }님(마이페이지)</a></li>
+            		<li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="${pageContext.request.contextPath}/mypage">${sessionScope.login.memId }님(마이페이지) 
+						</a>
+					</li>
+					<!-- 없을때 -->
+                	<c:if test="${sessionScope.login.profileImg == null }">
+	                	<img alt="" src="${pageContext.request.contextPath}/assets/img/non.png" id="topImage" 
+	                	  class="rounded-circle img-thumbnail shadow-sm" width="50" style="cursor:pointer;">
+                	</c:if>
+                	<c:if test="${sessionScope.login.profileImg != null }">
+                	    <img alt="" src="${pageContext.request.contextPath}${sessionScope.login.profileImg}" id="topImage" 
+	                	  class="rounded-circle img-thumbnail shadow-sm" width="50" style="cursor:pointer;">
+                	</c:if>
 	                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="${pageContext.request.contextPath}/logoutDo">로그아웃</a></li>
+	             
             	</c:if>
             </ul>
         </div>

@@ -155,18 +155,41 @@
 		 <artifactId>jackson-databind</artifactId>
 		 <version>2.9.6</version>
 		 </dependency>
-		 <!-- Apache Commons FileUpload -->
-<dependency>
-<groupId>commons-fileupload</groupId>
-<artifactId>commons-fileupload</artifactId>
-<version>1.4</version>
-</dependency>
-<!-- Apache Commons IO -->
-<dependency>
-<groupId>commons-io</groupId>
-<artifactId>commons-io</artifactId>
-<version>2.8.0</version>
-</dependency>
+		 
+		  <!-- Apache Commons FileUpload-->
+		 <dependency>
+			 <groupId>commons-fileupload</groupId>
+			 <artifactId>commons-fileupload</artifactId>
+			 <version>1.4</version>
+		 </dependency>
+		 <!-- Apache Commons IO -->
+		 <dependency>
+			 <groupId>commons-io</groupId>
+			 <artifactId>commons-io</artifactId>
+			 <version>2.8.0</version>
+		 </dependency>
+		<!-- spring security 관련 -->
+		<dependency>
+		  <groupId>org.springframework.security</groupId>
+		  <artifactId>spring-security-web</artifactId>
+		  <version>5.3.13.RELEASE</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.springframework.security</groupId>
+		  <artifactId>spring-security-config</artifactId>
+		  <version>5.3.13.RELEASE</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.springframework.security</groupId>
+		  <artifactId>spring-security-taglibs</artifactId>
+		  <version>5.3.13.RELEASE</version>
+		</dependency>     
+		<!-- stringUtils blank check-->
+		<dependency>
+		 <groupId>org.apache.commons</groupId>
+		 <artifactId>commons-lang3</artifactId>
+		 <version>3.11</version>
+		</dependency>
 		      
 	</dependencies>
     <build>

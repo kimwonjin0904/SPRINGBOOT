@@ -5,43 +5,41 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>마이페이지</title>
+<title>mypage</title>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/inc/top.jsp"></jsp:include>
-    <!-- 로그인 -->
+	
     <section class="page-section" id="contact" style="margin-top:150px">
         <div class="container">
             <!-- Contact Section Heading-->
-            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">마이페이지</h2>
+            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">mypage</h2>
             <!-- Icon Divider-->
             <div class="divider-custom">
                 <div class="divider-custom-line"></div>
                 <div class="divider-custom-icon">
-                <!-- 없을때 -->
-                	<c:if test="${sessionScope.login.profileImg == null}">
-							<img alt="" src="${pageContext.request.contextPath}/assets/img/non.png" id="myImage"
-							class="rounded-circle img-thumbnail shadow-sm" width="200" style="cursor:pointer;"><!-- 동그랗게 만든 것 -->
-					</c:if>
-					<c:if test="${sessionScope.login.profileImg != null}">
-						<img alt="" src="${pageContext.request.contextPath}${sessionScope.login.profileImg}" id="myImage"
-     					class="rounded-circle img-thumbnail shadow-sm" width="200" style="cursor:pointer;">
-					</c:if>
-					<form id="profileForm" enctype="multipart/form-data">
-						<input accept="image/*" type="file" style="display:none;" name="uploadImage" id="uploadImage">
-					</form>
-				</div>
+					<!-- 없을때 -->
+                	<c:if test="${sessionScope.login.profileImg == null }">
+	                	<img alt="" src="${pageContext.request.contextPath}/assets/img/non.png" id="myImage" 
+	                	  class="rounded-circle img-thumbnail shadow-sm" width="200" style="cursor:pointer;">
+                	</c:if>
+                	<c:if test="${sessionScope.login.profileImg != null }">
+                	    <img alt="" src="${pageContext.request.contextPath}${sessionScope.login.profileImg}" id="myImage" 
+	                	  class="rounded-circle img-thumbnail shadow-sm" width="200" style="cursor:pointer;">
+                	</c:if>
+                	<form id="profileForm" enctype="multipart/form-data">
+						<input accept="image/*" type="file" style="display:none;" name="uploadImage" id="uploadImage">                	
+                	</form>
+                </div>
                 <div class="divider-custom-line"></div>
             </div>
-                        	
-            
             <!-- Contact Section Form-->
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-7">
                     <form id="contactForm" action="${pageContext.request.contextPath}/loginDo" method="post" data-sb-form-api-token="API_TOKEN">
                         <!-- Name input-->
                         <div class="form-floating mb-3">
-                            <input class="form-control" name="memId" value="${cookie.rememberId.value}" type="text" placeholder="아이디를 입력하세요..." data-sb-validations="required" />
+                            <input class="form-control" name="memId" value="${cookie.rememberId.value }" type="text" placeholder="아이디를 입력하세요..." data-sb-validations="required" />
                             <label for="">아이디</label>
                         </div>
                         <!-- Email address input-->
@@ -51,7 +49,7 @@
                         </div>
 						<!-- 아이디 기억 -->
 	                    <div class="form-floating mb-3">
-	                        <input ${cookie.rememberId.value == null ? "" : "checked"} type="checkbox" class="form-check-input" name="remember"> 아이디 기억하기
+	                        <input ${cookie.rememberId.value ==null ? "" : "checked" }  type="checkbox" class="form-check-input" name="remember"> 아이디 기억하기
 	                    </div>
                         <button class="btn btn-primary btn-xl" id="submitButton" type="submit">로그인</button>
                     </form>
@@ -60,47 +58,46 @@
         </div>
     </section>
    	<!-- 회원가입 -->
-	<jsp:include page="/WEB-INF/inc/footer.jsp"></jsp:include>    
+	<jsp:include page="/WEB-INF/inc/footer.jsp"></jsp:include> 
 	<script>
-	$(document).ready(function(){
-		$("#myImage").click(function(){ 
-			$("#uploadImage").click();
+		$(document).ready(function(){
+			$("#myImage").click(function(){
+				$("#uploadImage").click();
+			});		
+			// file을 선택하면!
+			$("#uploadImage").on("change", function(){
+				 var file = $(this)[0].files[0];
+				 if(file){
+					 var fileType= file['type'];
+					 var checkType = ['image/gif','image/jpeg','image/jpg','image/png'];
+					 if(!checkType.includes(fileType)){
+						 alert("유효한 이미지 타입이 아닙니다.!!");
+						 $(this).val(''); // 파일선택 초기화
+					 }else{
+						 //전송
+						 // html 폼 데이터를 쉽게 가져옴
+						 var formData = new FormData($("#profileForm")[0]);
+						 $.ajax({
+							  url : '<c:url value="/files/upload" />'
+							 ,type: 'POST'
+							 ,data: formData
+							 ,processData:false //전송 객체를 URL인코딩 하지 않도록
+							 ,contentType:false //파일을 이진 데이터 형태로 전동하기 위해 
+							 ,success : function(res){
+								 console.log(res);
+								 if(res.message == 'success'){
+									$("#myImage").attr("src", "${pageContext.request.contextPath}"+res.imagePath);
+									$("#topImage").attr("src", "${pageContext.request.contextPath}"+res.imagePath);
+								 }
+								 
+							 },error:function(e){
+								 console.log(e); 
+							 }
+						 });
+					 }
+				 }
+			});
 		});
-		
-		$("#uploadImage").on("change", function(){
-			var file = $(this)[0].files[0];
-			if(file){
-				var fileType = file['type'];
-				var checkType = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png'];
-				
-				if(!checkType.includes(fileType)){
-					alert("유효한 이미지 타입이 아닙니다");
-					$(this).val(""); // 파일 선택 초기화
-				} else {
-					// 전송 
-					// HTML 폼 데이터를 쉽게 가져옴
-					var formData = new FormData($("#profileForm")[0]);
-					$.ajax({
-						url: '<c:url value="/files/upload"/>',
-						type: 'POST',
-						data: formData,
-						processData: false, // 전송 객체를 URL 인코딩하지 않도록
-						contentType: false, // 파일을 이진 데이터 형태로 전송하기 위해
-						success: function(res){
-							if(res.message == 'success'){
-								$("#myImage").attr("src", "${pageContext.request.contextPath}" + res.imagePath);
-							}
-							console.log(res);
-						}, 
-						error: function(e){
-							console.log(e);
-						}
-					});
-				}
-			}
-		});
-	});
-	</script>
-
+	</script>	       
 </body>
 </html>

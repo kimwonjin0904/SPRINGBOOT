@@ -95,15 +95,16 @@ public class BoardController {
 	}
 	@ResponseBody
 	@PostMapping("/delReplyDo")
-	public String delReplyDo(@RequestBody ReplyVO vo) {		
+	public String delReplyDo(@RequestBody ReplyVO vo) {
 		System.out.println(vo);
-		String result = "s";
-		int cnt =boardService.delReply(vo.getReplyNo());
+		String result  = "s";
+		int cnt = boardService.delReply(vo.getReplyNo());
 		if(cnt == 0) {
 			result = "f";
 		}
 		return result;
 	}
+	
 	
 	
 }

@@ -9,15 +9,22 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.future.my.common.valid.Regist;
+import com.future.my.common.vo.MessageVO;
 import com.future.my.member.service.MemberService;
 import com.future.my.member.vo.MemberVO;
 
@@ -38,22 +45,46 @@ public class MemberController {
 	
 	
 	@RequestMapping("/registView")
-	public String registView() {
-		
+	public String registView(Model model, @ModelAttribute("member")MemberVO member) {
 		return "member/registView";
 	}
 	
-	@RequestMapping("/registDo")
-	public String registDo(MemberVO member) {
-		
+	@PostMapping("/registDo")
+	public String registDo(Model model
+			            , @Validated(Regist.class) @ModelAttribute("member")MemberVO member
+			            , BindingResult result) {
+		if(result.hasErrors()) {
+			//	@Validated 조건에 맞치 않으면 True
+			return "member/registView";
+		}
+		MessageVO msgVO = null;
 		System.out.println(member);
 		try {
 			member.setMemPw(passwordEncoder.encode(member.getMemPw()));
 			memberService.registMember(member);
+		} catch (DuplicateKeyException e) {
+			msgVO = new MessageVO(false,"회원가입"
+					             ,"중복 아이디 입니다!","/registView","회원가입");
+			model.addAttribute("msgVO", msgVO);
+			model.addAttribute("member",new MemberVO());
+			return "member/registView";
+		} catch (DataAccessException e) {	
+			msgVO = new MessageVO(false,"회원가입"
+		             ,"잘못된 입력입니다.","/registView","회원가입");
+			model.addAttribute("msgVO", msgVO);
+			model.addAttribute("member",new MemberVO());
+			return "member/registView";
 		} catch (Exception e) {
+			msgVO = new MessageVO(false,"회원가입"
+		             ,"시스템에 문의하세요","/registView","회원가입");
 			e.printStackTrace();
+			model.addAttribute("msgVO", msgVO);
+			model.addAttribute("member",new MemberVO());
+			return "member/registView";
 		}
-		return "redirect:/";
+		msgVO = new MessageVO(true,"회원가입","회원가입 성공!","/loginView","로그인"); 
+		model.addAttribute("msgVO", msgVO);
+		return "home";
 	}
 	
 	@RequestMapping("/loginView")
@@ -63,10 +94,16 @@ public class MemberController {
 	}
 	
 	@RequestMapping("/loginDo")
-	public String loginDo(MemberVO vo, HttpSession session
-			            , boolean remember, HttpServletResponse res) throws Exception {
+	public String loginDo(MemberVO vo, HttpSession session, Model model
+			            , boolean remember, HttpServletResponse res){
 		MemberVO user = null;
-		user = memberService.loginMember(vo);
+		try {
+			user = memberService.loginMember(vo);
+		} catch (Exception e) {
+			MessageVO msgVO = new MessageVO(false,"로그인","회원정보 없음!","/loginView","로그인"); 
+			model.addAttribute("msgVO", msgVO);
+			return "member/loginView";
+		}
 		// 사용자 입력 vo 비밀번호와 db user 비밀번호가 일치하면 true, 그렇지 않으면 false 반환
 		boolean match = passwordEncoder.matches(vo.getMemPw(), user.getMemPw());
 		if(user == null || !match) {

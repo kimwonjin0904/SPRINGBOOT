@@ -32,13 +32,13 @@ public class FreeBoardService {
 			throw new Exception();
 		}
 	}
-	public FreeBoardVO getBoard(int boNO) throws Exception {
-		FreeBoardVO board = dao.getBoard(boNO);
+	public FreeBoardVO getBoard(int boNo) throws Exception {
+		FreeBoardVO board = dao.getBoard(boNo);
 		if(board == null) {
-		throw new Exception();
-	}
-	//조회수 증가
-	dao.increaseHit(boNO);
-	return board;
+			throw new Exception();
+		}
+		//조회수 증가!
+		dao.increaseHit(boNo);
+		return board;
 	}
 }

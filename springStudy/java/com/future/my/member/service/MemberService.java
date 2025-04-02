@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +22,9 @@ public class MemberService {
 		             // 스프링이 빈(bean)을 자동으로 관리 
 		IMemberDAO dao;
 		
-		public void registMember(MemberVO vo) throws Exception {
+		public void registMember(MemberVO vo) throws  DuplicateKeyException
+		                                             ,DataAccessException
+		                                             ,Exception {
 			int result = dao.registMember(vo);
 			if(result == 0) {
 				throw new Exception();

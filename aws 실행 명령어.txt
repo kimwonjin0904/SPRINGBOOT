@@ -1,0 +1,80 @@
+cd..
+cd..
+tools
+cd aws
+키 복사
+
+
+# 패키지 목록 갱신(advenced packagin tool)
+sduo apt update
+
+#패키지 업 그레이드(다운 및 설치)
+sudo apt upgrade -y
+
+ #자바설치
+sudo apt install openjdk-17-jdk -y    
+
+#설치 확인
+java -version  
+
+#폴더 생성
+mkdir workspace
+
+#폴더 확인
+ll
+
+#시간 확인
+date
+
+#시간 변경
+sudo rm /etcc/localtime
+sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+#fz열기 
+
+
+
+
+--실행 -> d
+#실행
+cd wordkspace
+java -jar letter-0.0.1-SNAPSHOT.jar --server.port=8080
+java -jar jap.jar --server.port=8080
+
+#서버가 잘 돌아가는지 체크 ,프로세스 체크
+ps -ef | grep java
+
+#그리고 aws 인바운드 규칙추가 
+#본인 ip :8080
+
+
+
+#background 실행
+nohup java -jar letter-0.0.1-SNAPSHOT.jar --server.port=8080 >letter.log 2>&1 &
+nohup java -jar jap.jar --server.port=8080 >jap.log 2>&1 &
+
+#로그 확인
+fx새로고침시 letter생김
+
+
+#실시간 로그 체크
+tail -f letter.log
+
+
+#서버가 잘 돌아가는지 체크 ,프로세스 체크
+ps -ef | grep java
+
+#서버 끄기
+sudo kill 1663(자기번호)
+
+
+
+--
+1.파일이동-> aws로
+2.실행
+3.서비스 체크
+4.인바운드 규칙 편집
+5.접속 확인
+
+
+

@@ -1,0 +1,91 @@
+폴더 보기 ll
+폴더 만들기 mkdir mytomcat
+폴더 삭제 rm -r mytomcat
+
+홈으로이동 cd ~
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.104/bin/apache-tomcat-9.0.104.tar.gz
+--no-check-certificate
+
+#압축풀기
+tar - xvzf apache-tomcat-0.0.104.tar.gz
+
+#폴더 이동
+mv apache-tomcat-9.0.104 mytomcat
+
+#포트 확인
+ss -tuln
+
+#포트 각각 할당받은 포트로 변경
+nano ~/mytomcat/conf/server.xml
+
+
+#nano 텍스트 편집기
+-----------------------
+모든 명령어 앞에는 ^ 또는 M
+캐럿기호(^) ctrl키 나타냄
+문자(M)은 -> alt 키를 나타냄
+^o -> ctrl + o 동시에: 변경내용저장
+^x -> ctrl + x 종료
+파일경로 나옴 enter
+-------------------------
+
+#파일 생성을 위해 위치 이동
+cd ~/mytomcat/webapps/ROOT/
+
+
+#정적 파일 생성
+echo "<h1>Hello, im kwj</h1>" > index.html
+
+#TOMCAT 실행
+java -version
+~/mytomcat/bin/startup.sh
+
+#접속 확인 ip:
+인터넷에다가 할당받은 포트(startup 8085) -> 192.168.04.44:8085
+
+#프로세스 확인
+ps -ef | grep java
+ps -ef | grep 포트 8085
+ss- tuln | grop 포트
+
+#프로세스 종료
+kill PID
+
+#spring boot 실행(jre 있어야 실행됨)
+java -jar letter-0.0.1-SNAPSHOT.jar --server.port=8085
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
